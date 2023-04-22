@@ -79,12 +79,12 @@
     <LibraryPath>C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLAD\src;C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLAD\include;C:\Users\willi\source\repos\Hello OpenGL\Libraries\glm;C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLFW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLAD\src;C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLFW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\GLAD\include;$(SolutionDir)Libraries\glm;$(SolutionDir)Libraries\GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\GLAD\src;$(SolutionDir)Libraries\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLAD\include;C:\Users\willi\source\repos\Hello OpenGL\Libraries\glm;C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLFW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLAD\src;C:\Users\willi\source\repos\Hello OpenGL\Libraries\GLFW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\GLAD\include;$(SolutionDir)Libraries\glm;$(SolutionDir)Libraries\GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\GLAD\src;$(SolutionDir)Libraries\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,6 +156,7 @@
     <None Include="..\Shaders\main.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
