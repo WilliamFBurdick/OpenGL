@@ -9,6 +9,8 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include "Model.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn);
@@ -198,6 +200,9 @@ int main()
 	shader.setInt("texture1", 0);
 	shader.setInt("texture2", 1);
 
+	string path = "../Models/backpack/backpack.obj";
+	Model backpack(path.c_str());
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// update deltatime
@@ -212,83 +217,19 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// bind texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuse);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specular);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, emission);
-
 		shader.use();
 
-		// create transformations
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::mat4(1.0f);
-
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		shader.setMat4("model", model);
-		view = camera.GetViewMatrix();
-		shader.setMat4("view", view);
-		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
 		shader.setMat4("projection", projection);
+		shader.setMat4("view", view);
 
-		shader.setVec3("objectColor", glm::vec3(1.0f, 1.0f, 1.0f));
-		shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-
-		shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-		shader.setFloat("material.shininess", 32.0f);
-
-		shader.setInt("material.diffuse", 0);
-		shader.setInt("material.specular", 1);
-		shader.setInt("material.emission", 2);
-		shader.setFloat("time", glfwGetTime());
-
-		// set up lighting
-		// directional light
-		shader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-		shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
-		shader.setVec3("dirLight.diffuse", 0.05f, 0.05f, 0.05f);
-		// point lights
-
-
-		// spotlight
-		shader.setVec3("spotLight.position", camera.Position);
-		shader.setVec3("spotLight.direction", camera.Front);
-		shader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-		shader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-		shader.setFloat("spotLight.constant", 1.0f);
-		shader.setFloat("spotLight.linear", 0.09f);
-		shader.setFloat("spotLight.quadratic", 0.032f);
-		shader.setFloat("spotLight.cutOff", glm::cos(glm::radians(10.0f)));
-		shader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-		
-
-		// render container
-		glBindVertexArray(VAO);
-		for (unsigned int i = 0; i < 10; i++)
-		{
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			shader.setMat4("model", model);
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-
-		// render light cube
-		lightShader.use();
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f));
-		lightShader.setMat4("model", model);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("projection", projection);
-		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// render model
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f));
+		shader.setMat4("model", model);
+		backpack.Draw(shader);
 
 
 		// process events and swap buffers
